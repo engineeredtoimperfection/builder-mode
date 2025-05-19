@@ -1,5 +1,3 @@
-#!/bin/bash
-
 MUSIC_PID=""
 
 # Type 'buildr' to enter builder mode
