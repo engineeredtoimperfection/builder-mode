@@ -7,7 +7,7 @@ buildr() {
     cd ~/Development || return 1
 
     # Play music
-    # nohup mpv ~/Music/builder-vibes.mp3 >/dev/null 2>&1 &
+    nohup mpv sunset-lover.mp3 > /dev/null 2>&1 &
 
     # Modify prompt and change text colour
     # export PS1="[\[\033[01;32m\]BUILDR MODE\[\033[00m\]] \u@\h:\w\$ "
