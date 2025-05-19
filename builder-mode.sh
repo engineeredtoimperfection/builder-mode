@@ -6,7 +6,7 @@ buildr() {
     echo "🎵 Builder vibes loading..."
 
     # Play music
-    mpv --no-terminal sunset-lover.mp3 &
+    mpv --no-terminal --audio-display=no sunset-lover.mp3 &
 
     cd ~/Development || return 1
 
