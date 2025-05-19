@@ -1,12 +1,15 @@
 #!/bin/bash
 
+MUSIC_PID=""
+
 # Type 'buildr' to enter builder mode
 buildr() {
 
     echo "🎵 Builder vibes loading..."
 
-    # Play music
+    # Play music and capture process ID
     mpv --no-terminal --audio-display=no sunset-lover.mp3 &
+    MUSIC_PID=$!
 
     cd ~/Development || return 1
 
@@ -26,7 +29,7 @@ exitbuildr() {
     echo "👋 Exiting Builder Mode."
 
     # Stop music
-    # pkill mpv
+    kill "$MUSIC_PID"
 
     # Reset terminal prompt and text colour
     # export PS1="\u@\h:\w\$ "
