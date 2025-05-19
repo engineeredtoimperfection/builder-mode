@@ -4,10 +4,11 @@
 buildr() {
 
     echo "🎵 Builder vibes loading..."
-    cd ~/Development || return 1
 
     # Play music
     mpv --no-terminal sunset-lover.mp3 &
+
+    cd ~/Development || return 1
 
     # Modify prompt and change text colour
     # export PS1="[\[\033[01;32m\]BUILDR MODE\[\033[00m\]] \u@\h:\w\$ "
