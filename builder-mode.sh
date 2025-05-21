@@ -2,13 +2,15 @@ MUSIC_PID=""
 
 PS1_ORIGINAL=""
 
+SCRIPT_DIR="$(dirname "$BASH_SOURCE")"
+
 # Type 'buildr' to enter builder mode
 buildr() {
 
     echo "🎵 Builder vibes loading..."
 
     # Play music and capture process ID
-    mpv --no-terminal --audio-display=no sunset-lover.mp3 &
+    mpv --no-terminal --audio-display=no "$SCRIPT_DIR/sunset-lover.mp3" &
     MUSIC_PID=$!
 
     cd ~/Development || return 1
