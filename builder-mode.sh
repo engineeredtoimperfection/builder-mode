@@ -1,5 +1,7 @@
 MUSIC_PID=""
 
+PS1_ORIGINAL=""
+
 # Type 'buildr' to enter builder mode
 buildr() {
 
@@ -11,8 +13,11 @@ buildr() {
 
     cd ~/Development || return 1
 
-    # Modify prompt and change text colour
-    # export PS1="[\[\033[01;32m\]BUILDR MODE\[\033[00m\]] \u@\h:\w\$ "
+    # Modify prompt
+    PS1_ORIGINAL="$PS1"
+    export PS1="\[\e[1;31m\][BUILDING...]\[\e[0m\] \u@\h:\w\$ "
+
+    # Change text colour
     # echo -e "\033[0;32m"  # Set text to green
 
     # Change system wallpaper
@@ -29,9 +34,11 @@ exitbuildr() {
     # Stop music
     kill "$MUSIC_PID"
 
-    # Reset terminal prompt and text colour
-    # export PS1="\u@\h:\w\$ "
-    # echo -e "\033[0m"  # Reset text color
+    # Reset terminal prompt
+    export PS1="$PS1_ORIGINAL"
+
+    # Reset text colour
+    # echo -e "\033[0m"
 
     # Restore system wallpaper
     # gsettings set org.cinnamon.desktop.background picture-uri "file:///home/$USER/Pictures/wallpapers/default-wallpaper.jpg"
