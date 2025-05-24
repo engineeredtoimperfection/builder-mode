@@ -4,8 +4,15 @@ PS1_ORIGINAL=""
 
 SCRIPT_DIR="$(dirname "$BASH_SOURCE")"
 
+BUILDR_MODE=0
+
 # Type 'buildr' to enter builder mode
 buildr() {
+
+    if (( $BUILDR_MODE == 1 )); then
+        echo "Builder Mode is already running"
+        return 1
+    fi
 
     echo "🎵 Builder vibes loading..."
 
@@ -26,10 +33,17 @@ buildr() {
     # gsettings set org.cinnamon.desktop.background picture-uri "file:///home/$USER/Pictures/wallpapers/builder-wallpaper.jpg"
 
     echo "🧪 Builder Mode: Let’s build something silly and cool."
+
+    BUILDR_MODE=1
 }
 
 # Type 'exitbuildr' to exit builder mode
 exitbuildr() {
+
+    if (( $BUILDR_MODE == 0 )); then
+        echo "Builder Mode is not running"
+        return 1
+    fi
 
     echo "👋 Exiting Builder Mode."
 
@@ -47,5 +61,7 @@ exitbuildr() {
 
     cd || return 1
     echo "👋 Back to base: Bye!"
+
+    BUILDR_MODE=0
 }
 
