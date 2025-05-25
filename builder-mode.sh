@@ -8,10 +8,10 @@ BUILDR_MODE_PROMPT="\[\e[1;31m\][BUILDING...]\[\e[0m\] \u@\h:\w\$ "
 BUILDR_MODE_BLOCK_MARKER_START="# >>> BUILDER MODE BLOCK START >>>"
 BUILDR_MODE_BLOCK_MARKER_END="# <<< BUILDER MODE BLOCK END <<<"
 
-BUILDR_MODE_BLOCK=$(cat << _END_OF_BLOCK_
-    $BUILDR_MODE_BLOCK_MARKER_START
-    export PS1="$BUILDR_MODE_PROMPT"
-    $BUILDR_MODE_BLOCK_MARKER_END
+BUILDR_MODE_BLOCK=$(cat <<_END_OF_BLOCK_
+$BUILDR_MODE_BLOCK_MARKER_START
+export PS1="$BUILDR_MODE_PROMPT"
+$BUILDR_MODE_BLOCK_MARKER_END
 _END_OF_BLOCK_
 )
 
@@ -118,7 +118,7 @@ buildr() {
 
     # Modify prompt (persistent)
     if ! grep -Fxq "$BUILDR_MODE_BLOCK_MARKER_START" "$BASHRC"; then
-        echo -e "\n$BUILDR_MODE_BLOCK" >> "$BASHRC"
+        echo -e "\n\n$BUILDR_MODE_BLOCK" >> "$BASHRC"
         source "$BASHRC"
     else
         echo "Builder Mode prompt is already active"
