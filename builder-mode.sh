@@ -150,6 +150,11 @@ exitbuildr() {
     # Reset terminal prompt
     cp "$BASHRC" "$BASHRC_BAK" # Back up .bashrc before removing any lines
     sed -i "/# >>> BUILDER MODE BLOCK START >>>/,/# <<< BUILDER MODE BLOCK END <<</d" "$BASHRC"
+
+    # Remove any trailing blank lines in .bashrc
+    tmp=$(mktemp)
+    tac "$BASHRC" | sed '/\S/,$!d' | tac > "$tmp" && mv "$tmp" "$BASHRC"
+
     source "$BASHRC"
 
     # Reset text colour
