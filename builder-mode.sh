@@ -1,11 +1,7 @@
-MUSIC_PID=""
-
 SCRIPT_DIR="$(dirname "$BASH_SOURCE")"
 
 BASHRC="$HOME/.bashrc"
 BASHRC_BAK="$HOME/.bashrc.bak"
-
-BUILDR_MODE=0
 
 BUILDR_MODE_PROMPT="\[\e[1;31m\][BUILDING...]\[\e[0m\] \u@\h:\w\$ "
 
@@ -19,8 +15,93 @@ BUILDR_MODE_BLOCK=$(cat << _END_OF_BLOCK_
 _END_OF_BLOCK_
 )
 
+_read_prompt_state() {
+    local STATE_FILE="$SCRIPT_DIR/.builder-mode-state"
+
+    [ -f "$STATE_FILE" ] && source "$STATE_FILE"
+
+    # Use default values if unset
+    : ${BUILDR_MODE:=0}
+    : ${MUSIC_PID:=}
+}
+
+_play_music() {
+    
+    # Play music and capture process ID
+    mpv --no-terminal --audio-display=no "$SCRIPT_DIR/sunset-lover.mp3" &
+    MUSIC_PID=$!
+
+    local STATE_FILE="$SCRIPT_DIR/.builder-mode-state"
+    [ -f "$STATE_FILE" ] || touch "$STATE_FILE"
+
+    if grep -q "^MUSIC_PID=" "$STATE_FILE"; then
+        # Replace value
+        sed -i "s|^MUSIC_PID=.*|MUSIC_PID=$MUSIC_PID|" "$STATE_FILE"
+    else
+        # Variable doesn't exist
+        echo "MUSIC_PID=$MUSIC_PID" >> "$STATE_FILE"
+    fi
+}
+
+_stop_music() {
+
+    # Unchecked: Buggy code
+    kill "$MUSIC_PID"
+
+    MUSIC_PID=""
+
+    local STATE_FILE="$SCRIPT_DIR/.builder-mode-state"
+    [ -f "$STATE_FILE" ] || touch "$STATE_FILE"
+
+    if grep -q "^MUSIC_PID=" "$STATE_FILE"; then
+        # Replace value
+        sed -i "s|^MUSIC_PID=.*|MUSIC_PID=$MUSIC_PID|" "$STATE_FILE"
+    else
+        # Variable doesn't exist
+        echo "MUSIC_PID=$MUSIC_PID" >> "$STATE_FILE"
+    fi
+}
+
+_signal_builder_mode_started() {
+
+    echo "🧪 Builder Mode: Let’s build something silly and cool."
+
+    BUILDR_MODE=1
+
+    local STATE_FILE="$SCRIPT_DIR/.builder-mode-state"
+    [ -f "$STATE_FILE" ] || touch "$STATE_FILE"
+
+    if grep -q "^BUILDR_MODE=" "$STATE_FILE"; then
+        # Replace value
+        sed -i "s|^BUILDR_MODE=.*|BUILDR_MODE=$BUILDR_MODE|" "$STATE_FILE"
+    else
+        # Variable doesn't exist
+        echo "BUILDR_MODE=$BUILDR_MODE" >> "$STATE_FILE"
+    fi
+}
+
+_signal_builder_mode_stopped() {
+
+    echo "👋 Back to base: Bye!"
+    
+    BUILDR_MODE=0
+
+    local STATE_FILE="$SCRIPT_DIR/.builder-mode-state"
+    [ -f "$STATE_FILE" ] || touch "$STATE_FILE"
+
+    if grep -q "^BUILDR_MODE=" "$STATE_FILE"; then
+        # Replace value
+        sed -i "s|^BUILDR_MODE=.*|BUILDR_MODE=$BUILDR_MODE|" "$STATE_FILE"
+    else
+        # Variable doesn't exist
+        echo "BUILDR_MODE=$BUILDR_MODE" >> "$STATE_FILE"
+    fi
+}
+
 # Type 'buildr' to enter builder mode
 buildr() {
+
+    _read_prompt_state
 
     if (( $BUILDR_MODE == 1 )); then
         echo "Builder Mode is already running"
@@ -29,9 +110,9 @@ buildr() {
 
     echo "🎵 Builder vibes loading..."
 
-    # Play music and capture process ID
-    mpv --no-terminal --audio-display=no "$SCRIPT_DIR/sunset-lover.mp3" &
-    MUSIC_PID=$!
+    _play_music
+
+    _read_prompt_state
 
     cd ~/Development || return 1
 
@@ -49,13 +130,13 @@ buildr() {
     # Change system wallpaper
     # gsettings set org.cinnamon.desktop.background picture-uri "file:///home/$USER/Pictures/wallpapers/builder-wallpaper.jpg"
 
-    echo "🧪 Builder Mode: Let’s build something silly and cool."
-
-    BUILDR_MODE=1
+    _signal_builder_mode_started
 }
 
 # Type 'exitbuildr' to exit builder mode
 exitbuildr() {
+
+    _read_prompt_state
 
     if (( $BUILDR_MODE == 0 )); then
         echo "Builder Mode is not running"
@@ -64,8 +145,7 @@ exitbuildr() {
 
     echo "👋 Exiting Builder Mode."
 
-    # Stop music
-    kill "$MUSIC_PID"
+    _stop_music
 
     # Reset terminal prompt
     cp "$BASHRC" "$BASHRC_BAK" # Back up .bashrc before removing any lines
@@ -79,8 +159,7 @@ exitbuildr() {
     # gsettings set org.cinnamon.desktop.background picture-uri "file:///home/$USER/Pictures/wallpapers/default-wallpaper.jpg"
 
     cd || return 1
-    echo "👋 Back to base: Bye!"
 
-    BUILDR_MODE=0
+    _signal_builder_mode_stopped
 }
 
