@@ -6,6 +6,8 @@ SCRIPT_DIR="$(dirname "$BASH_SOURCE")"
 
 BUILDR_MODE=0
 
+BUILDR_MODE_PROMPT="\[\e[1;31m\][BUILDING...]\[\e[0m\] \u@\h:\w\$ "
+
 # Type 'buildr' to enter builder mode
 buildr() {
 
@@ -24,7 +26,7 @@ buildr() {
 
     # Modify prompt
     PS1_ORIGINAL="$PS1"
-    export PS1="\[\e[1;31m\][BUILDING...]\[\e[0m\] \u@\h:\w\$ "
+    export PS1="$BUILDR_MODE_PROMPT"
 
     # Change text colour
     # echo -e "\033[0;32m"  # Set text to green
