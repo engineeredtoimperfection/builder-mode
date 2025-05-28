@@ -8,7 +8,7 @@ BUILDR_MODE_BLOCK_MARKER_END="# <<< BUILDER MODE BLOCK END <<<"
 
 _get_buildr_mode_block() {
 
-local buildr_mode_prompt="\[\e[1;31m\][BUILDING...]\[\e[0m\] \u@\h:\w\$ "
+local buildr_mode_prompt="\[\e[1;31m\][BUILDING...]\[\e[1;34m\] \u@\h:\w\[\e[1;32m\]\$ "
     
 cat <<-_END_OF_BLOCK_
 $BUILDR_MODE_BLOCK_MARKER_START
