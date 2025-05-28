@@ -3,17 +3,20 @@ SCRIPT_DIR="$(dirname "$BASH_SOURCE")"
 BASHRC="$HOME/.bashrc"
 BASHRC_BAK="$HOME/.bashrc.bak"
 
-BUILDR_MODE_PROMPT="\[\e[1;31m\][BUILDING...]\[\e[0m\] \u@\h:\w\$ "
-
 BUILDR_MODE_BLOCK_MARKER_START="# >>> BUILDER MODE BLOCK START >>>"
 BUILDR_MODE_BLOCK_MARKER_END="# <<< BUILDER MODE BLOCK END <<<"
 
-BUILDR_MODE_BLOCK=$(cat <<_END_OF_BLOCK_
+_get_buildr_mode_block() {
+
+local buildr_mode_prompt="\[\e[1;31m\][BUILDING...]\[\e[0m\] \u@\h:\w\$ "
+    
+cat <<-_END_OF_BLOCK_
 $BUILDR_MODE_BLOCK_MARKER_START
-export PS1="$BUILDR_MODE_PROMPT"
+export PS1="$buildr_mode_prompt"
 $BUILDR_MODE_BLOCK_MARKER_END
 _END_OF_BLOCK_
-)
+
+}
 
 _read_latest_state() {
     local STATE_FILE="$SCRIPT_DIR/.builder-mode-state"
@@ -128,7 +131,7 @@ buildr() {
 
     # Modify prompt (persistent)
     if ! grep -Fxq "$BUILDR_MODE_BLOCK_MARKER_START" "$BASHRC"; then
-        echo -e "\n\n$BUILDR_MODE_BLOCK" >> "$BASHRC"
+        echo -e "\n\n$(_get_buildr_mode_block)" >> "$BASHRC"
         source "$BASHRC"
     else
         echo "Builder Mode prompt is already active"
