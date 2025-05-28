@@ -27,6 +27,8 @@ _read_latest_state() {
 
 _play_music() {
     
+    echo -e "\nMusic job control details -"
+
     # Play music and capture process ID
     mpv --no-terminal --audio-display=no "$SCRIPT_DIR/sunset-lover.mp3" &
     MUSIC_PID=$!
@@ -44,6 +46,8 @@ _play_music() {
 }
 
 _stop_music() {
+
+    echo -e "\nMusic job control details -"
 
     # Ensure PID is not empty and that an 'mpv' process with the stored PID exists
     if [[ -n "$MUSIC_PID" ]] && pgrep -l mpv | grep -q "$MUSIC_PID"; then
@@ -70,7 +74,7 @@ _stop_music() {
 
 _signal_builder_mode_started() {
 
-    echo "🧪 Builder Mode: Let’s build something silly and cool."
+    echo -e "\n🧪 Builder Mode: Let’s build something silly and cool.\n"
 
     BUILDR_MODE=1
 
@@ -88,7 +92,7 @@ _signal_builder_mode_started() {
 
 _signal_builder_mode_stopped() {
 
-    echo "👋 Back to base: Bye!"
+    echo -e "\n👋 Back to base: Bye!\n"
     
     BUILDR_MODE=0
 
@@ -114,7 +118,7 @@ buildr() {
         return 1
     fi
 
-    echo "🎵 Builder vibes loading..."
+    echo -e "\n🎵 Builder vibes loading..."
 
     _play_music
 
@@ -149,7 +153,7 @@ exitbuildr() {
         return 1
     fi
 
-    echo "👋 Exiting Builder Mode."
+    echo -e "\n👋 Exiting Builder Mode."
 
     _stop_music
 
