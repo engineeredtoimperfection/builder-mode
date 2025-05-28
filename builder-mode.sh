@@ -159,7 +159,7 @@ exitbuildr() {
 
     # Reset terminal prompt
     cp "$BASHRC" "$BASHRC_BAK" # Back up .bashrc before removing any lines
-    sed -i "/# >>> BUILDER MODE BLOCK START >>>/,/# <<< BUILDER MODE BLOCK END <<</d" "$BASHRC"
+    sed -i "/$BUILDR_MODE_BLOCK_MARKER_START/,/$BUILDR_MODE_BLOCK_MARKER_END/d" "$BASHRC"
 
     # Remove any trailing blank lines in .bashrc
     tmp=$(mktemp)
