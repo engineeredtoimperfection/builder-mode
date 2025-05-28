@@ -15,7 +15,7 @@ $BUILDR_MODE_BLOCK_MARKER_END
 _END_OF_BLOCK_
 )
 
-_read_prompt_state() {
+_read_latest_state() {
     local STATE_FILE="$SCRIPT_DIR/.builder-mode-state"
 
     [ -f "$STATE_FILE" ] && source "$STATE_FILE"
@@ -107,7 +107,7 @@ _signal_builder_mode_stopped() {
 # Type 'buildr' to enter builder mode
 buildr() {
 
-    _read_prompt_state
+    _read_latest_state
 
     if (( $BUILDR_MODE == 1 )); then
         echo "Builder Mode is already running"
@@ -118,7 +118,7 @@ buildr() {
 
     _play_music
 
-    _read_prompt_state
+    _read_latest_state
 
     cd ~/Development || return 1
 
@@ -142,7 +142,7 @@ buildr() {
 # Type 'exitbuildr' to exit builder mode
 exitbuildr() {
 
-    _read_prompt_state
+    _read_latest_state
 
     if (( $BUILDR_MODE == 0 )); then
         echo "Builder Mode is not running"
