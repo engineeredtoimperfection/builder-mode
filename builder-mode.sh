@@ -45,10 +45,16 @@ _play_music() {
 
 _stop_music() {
 
-    # Unchecked: Buggy code
-    kill "$MUSIC_PID"
+    # Ensure PID is not empty and that an 'mpv' process with the stored PID exists
+    if [[ -n "$MUSIC_PID" ]] && pgrep -l mpv | grep -q "$MUSIC_PID"; then
 
-    MUSIC_PID=""
+        kill "$MUSIC_PID"
+
+        MUSIC_PID=""
+        
+    else
+        echo "Music is not running"
+    fi
 
     local STATE_FILE="$SCRIPT_DIR/.builder-mode-state"
     [ -f "$STATE_FILE" ] || touch "$STATE_FILE"
